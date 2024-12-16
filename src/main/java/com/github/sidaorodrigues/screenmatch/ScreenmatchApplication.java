@@ -1,5 +1,6 @@
 package com.github.sidaorodrigues.screenmatch;
 
+import com.github.sidaorodrigues.screenmatch.service.ConsumoAPI;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +14,10 @@ public class ScreenmatchApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("Primeiro projeto Spring sem Web");
+		String url = "https://www.omdbapi.com/?t=the+office&apikey=42f9ab4";
+		ConsumoAPI consumoAPI = new ConsumoAPI();
+
+		var json = consumoAPI.obterDados(url);
+		System.out.println(json);
 	}
 }
