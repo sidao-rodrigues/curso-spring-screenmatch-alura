@@ -1,5 +1,6 @@
 package com.github.sidaorodrigues.screenmatch.principal;
 
+import com.github.sidaorodrigues.screenmatch.model.DadosEpisodio;
 import com.github.sidaorodrigues.screenmatch.model.DadosSerie;
 import com.github.sidaorodrigues.screenmatch.model.DadosTemporada;
 import com.github.sidaorodrigues.screenmatch.service.ConsumoAPI;
@@ -36,6 +37,18 @@ public class Principal {
 			dadosTemporadas.add(dadosTemporada);
 		}
 
-		dadosTemporadas.forEach(System.out::println);
+//		dadosTemporadas.forEach(System.out::println);
+//
+//        for (int x=0;x<dados.totalTemporadas();x++) {
+//            List<DadosEpisodio> episodiosTemporada = dadosTemporadas.get(x).episodios();
+//
+//            for (DadosEpisodio episodio: episodiosTemporada) {
+//                System.out.println(episodio.titulo());
+//            }
+//        }
+
+        dadosTemporadas
+                .forEach(t -> t.episodios()
+                        .forEach(ep -> System.out.println(ep.titulo())));
     }
 }
