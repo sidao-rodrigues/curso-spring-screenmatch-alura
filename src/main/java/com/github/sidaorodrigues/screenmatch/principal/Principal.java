@@ -7,8 +7,10 @@ import com.github.sidaorodrigues.screenmatch.service.ConsumoAPI;
 import com.github.sidaorodrigues.screenmatch.service.ConverteDados;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Principal {
 
@@ -47,8 +49,22 @@ public class Principal {
 //            }
 //        }
 
-        dadosTemporadas
-                .forEach(t -> t.episodios()
-                        .forEach(ep -> System.out.println(ep.titulo())));
+//        dadosTemporadas
+//                .forEach(t -> t.episodios()
+//                        .forEach(ep -> System.out.println(ep.titulo())));
+
+        List<DadosEpisodio> dadosEpisodios = dadosTemporadas.stream()
+                .flatMap(t -> t.episodios().stream())
+//                .toList();
+                .collect(Collectors.toList());
+
+        System.out.println("Top 5 episodes!");
+        dadosEpisodios.stream()
+                .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+                .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+                .limit(5)
+                .forEach(System.out::println);
+
+        
     }
 }
