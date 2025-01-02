@@ -3,9 +3,12 @@ package com.github.sidaorodrigues.screenmatch.principal;
 import com.github.sidaorodrigues.screenmatch.model.DadosEpisodio;
 import com.github.sidaorodrigues.screenmatch.model.DadosSerie;
 import com.github.sidaorodrigues.screenmatch.model.DadosTemporada;
+import com.github.sidaorodrigues.screenmatch.model.Episodio;
 import com.github.sidaorodrigues.screenmatch.service.ConsumoAPI;
 import com.github.sidaorodrigues.screenmatch.service.ConverteDados;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -65,6 +68,29 @@ public class Principal {
                 .limit(5)
                 .forEach(System.out::println);
 
-        
+        List<Episodio> episodios = dadosTemporadas.stream()
+                .flatMap(t -> t.episodios().stream()
+                        .map(d -> new Episodio(t.numero(), d))
+                        .sorted(Comparator.comparing(Episodio::getAvaliacao).reversed())
+                ).collect(Collectors.toList());
+
+        episodios.forEach(System.out::println);
+
+        System.out.println("A partir de que ano você deseja ver os episódios?");
+        var ano = leitura.nextInt();
+        leitura.nextLine();
+
+        LocalDate dataBusca = LocalDate.of(ano, 1, 1);
+
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        episodios.stream()
+                .filter(e -> e != null && e.getDataLancamento().isAfter(dataBusca))
+                .forEach(e -> System.out.println(
+                        "Temporada: " + e.getTemporada() +
+                                " - Episódio: " + e.getTitulo() +
+                                " - Data lançamento: " + formatador.format(e.getDataLancamento())
+                ));
+
     }
 }
