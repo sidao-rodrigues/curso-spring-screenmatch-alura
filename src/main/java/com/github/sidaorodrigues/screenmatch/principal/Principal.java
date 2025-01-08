@@ -9,10 +9,7 @@ import com.github.sidaorodrigues.screenmatch.service.ConverteDados;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Principal {
@@ -61,11 +58,16 @@ public class Principal {
 //                .toList();
                 .collect(Collectors.toList());
 
-        System.out.println("Top 5 episodes!");
+        System.out.println("Top 10 episodes!");
         dadosEpisodios.stream()
                 .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+//                .peek(e -> System.out.println("Primeiro Filtro (N/A) " + e))
                 .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
-                .limit(5)
+//                .peek(e -> System.out.println("Ordenação " + e))
+                .limit(10)
+//                .peek(e -> System.out.println("Limite " + e))
+                .map(e -> e.titulo().toUpperCase())
+//                .peek(e -> System.out.println("Map " + e))
                 .forEach(System.out::println);
 
         List<Episodio> episodios = dadosTemporadas.stream()
@@ -75,6 +77,20 @@ public class Principal {
                 ).collect(Collectors.toList());
 
         episodios.forEach(System.out::println);
+
+        System.out.println("Informe o nome do titulo?");
+
+        var trechoTitulo = leitura.nextLine();
+
+        Optional<Episodio> episodioBuscado = episodios.stream()
+                .filter(e -> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
+                .findFirst();
+
+        if(episodioBuscado.isPresent()) {
+            System.out.println(episodioBuscado.get());
+        } else {
+            System.out.println("Nenhum episódeo encontrado");
+        }
 
         System.out.println("A partir de que ano você deseja ver os episódios?");
         var ano = leitura.nextInt();
